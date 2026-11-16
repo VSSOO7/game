@@ -1,0 +1,46 @@
+# macOS
+.DS_Store
+.AppleDouble
+._*
+
+# Environment and credentials
+.env
+.env.*
+!.env.example
+.envrc
+.npmrc
+.netrc
+*.pem
+*.key
+*.p12
+*.pfx
+*credentials*.json
+*secrets*.json
+*api-key*
+*api_key*
+credentials/
+secrets/
+.cloudflared/
+
+# Local installs and caches
+node_modules/
+.npm/
+.cache/
+.venv/
+__pycache__/
+*.py[cod]
+
+# Build output and local runtime files
+[dD]ist/
+[Ll]ibrary/
+[Tt]emp/
+[Bb]uild/
+[Bb]uilds/
+.godot/
+coverage/
+*.log
+*.pid
+*checkpoint*.json
+*scoreboard*.json
+*handoff*.bin
+room.bin

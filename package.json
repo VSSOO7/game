@@ -1,0 +1,6 @@
+{
+  "name": "kaun-sus-hai",
+  "private": true,
+  "scripts": { "start": "node server.mjs" },
+  "dependencies": { "qrcode-generator": "2.0.4" }
+}

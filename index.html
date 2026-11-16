@@ -1,0 +1,1477 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f7f5ee">
+<meta name="description" content="A pass-the-phone imposter game for 3–12 friends.">
+<title>Kaun Sus Hai?</title>
+<style>
+:root {
+  color-scheme: light;
+  --paper: #f7f5ee;
+  --card: #fffdf7;
+  --ink: #172c24;
+  --muted: #52645a;
+  --line: #d9ded1;
+  --green: #d9f975;
+  --deep: #18392e;
+  --pink: #f9c5df;
+  --display: "Bricolage Grotesque", "Arial Rounded MT Bold", "Trebuchet MS", system-ui, sans-serif;
+  --body: "DM Sans", system-ui, sans-serif;
+}
+*, *::before, *::after { box-sizing: border-box; }
+body {
+  margin: 0;
+  min-height: 100vh;
+  color: var(--ink);
+  background: var(--paper);
+  font: 500 1rem/1.45 var(--body);
+}
+button, input { font: inherit; }
+button { cursor: pointer; }
+button:disabled { cursor: default; }
+button, input { -webkit-tap-highlight-color: transparent; }
+button:focus-visible, input:focus-visible, summary:focus-visible {
+  outline: 3px solid #8a3970;
+  outline-offset: 3px;
+}
+:focus:not(:focus-visible) { outline: none; }
+h1, h2, h3, p { margin: 0; }
+h1, h2, h3 { font-family: var(--display); line-height: 1.08; }
+h1, h2, .breakable { overflow-wrap: anywhere; }
+.shell { width: min(1120px, calc(100% - 48px)); margin-inline: auto; }
+.site-header { border-bottom: 1px solid var(--line); }
+.header-inner {
+  min-height: 76px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+}
+.brand { display: flex; align-items: center; gap: 11px; font: 900 1.28rem/1 var(--display); letter-spacing: -.06em; }
+.logo {
+  display: grid;
+  width: 38px;
+  height: 34px;
+  place-items: center;
+  position: relative;
+  margin-bottom: 4px;
+  border-radius: 11px;
+  color: var(--green);
+  background: var(--deep);
+  font: 900 1.42rem/1 var(--display);
+  transform: rotate(-7deg);
+}
+.logo::after {
+  position: absolute;
+  bottom: -4px;
+  left: 9px;
+  width: 9px;
+  height: 9px;
+  background: inherit;
+  content: "";
+  transform: skewY(-35deg);
+}
+.button {
+  min-height: 48px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 10px 15px;
+  background: var(--card);
+  color: var(--ink);
+  font-weight: 750;
+  text-align: center;
+}
+.button:hover:not(:disabled) { border-color: var(--deep); background: #edf1e6; }
+.button:disabled { opacity: .54; }
+.button[hidden] { display: none; }
+.button.primary {
+  min-height: 56px;
+  border: 1px solid var(--ink);
+  background: var(--green);
+  box-shadow: 0 3px 0 var(--ink);
+}
+.button.primary:hover:not(:disabled) { background: #e9ffa8; }
+.button.primary:active:not(:disabled) { transform: translateY(2px); box-shadow: 0 1px 0 var(--ink); }
+.button.block { display: flex; width: 100%; }
+.button.help { min-height: 40px; padding: 8px 12px; border-radius: 999px; font-size: .83rem; }
+.help-icon {
+  display: grid;
+  width: 18px;
+  height: 18px;
+  place-items: center;
+  border: 1.5px solid currentColor;
+  border-radius: 50%;
+  font-size: .7rem;
+  line-height: 1;
+}
+.arrow { font-size: 1.2em; line-height: 1; }
+main { padding-block: 42px 56px; }
+.setup-grid { display: grid; grid-template-columns: minmax(0, 1.18fr) minmax(0, 1fr); gap: 32px; align-items: start; }
+.intro { margin-bottom: 24px; }
+.kicker {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: .72rem;
+  font-weight: 850;
+  letter-spacing: .115em;
+  text-transform: uppercase;
+}
+.status-dot { width: 8px; height: 8px; border-radius: 50%; background: #47734d; }
+.intro h1 {
+  margin: 9px 0 11px;
+  font-size: clamp(2.5rem, 5.1vw, 4.25rem);
+  font-weight: 900;
+  letter-spacing: -.075em;
+  line-height: .99;
+}
+.intro p, .muted { color: var(--muted); }
+.setup-panel, .panel {
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  background: var(--card);
+  box-shadow: 0 4px 0 #e7eadd;
+}
+.setup-panel { padding: 22px; }
+.setup-section + .setup-section { margin-top: 21px; padding-top: 18px; border-top: 1px solid var(--line); }
+.section-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+.section-top h2 { font-size: 1.21rem; letter-spacing: -.04em; }
+.pill {
+  display: inline-flex;
+  width: fit-content;
+  align-items: center;
+  gap: 7px;
+  border-radius: 999px;
+  padding: 5px 10px;
+  background: #e8eee4;
+  color: #294537;
+  font-size: .74rem;
+  font-weight: 800;
+  white-space: nowrap;
+}
+.names { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+.name-field { position: relative; min-width: 0; }
+.name-field input, .answer-input {
+  width: 100%;
+  min-height: 47px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 10px 12px;
+  color: var(--ink);
+  background: #f8f8f1;
+}
+.name-field input { padding-left: 40px; }
+.name-field.has-remove input { padding-right: 42px; }
+input::placeholder { color: #65766a; opacity: 1; }
+.name-index {
+  position: absolute;
+  top: 50%;
+  left: 10px;
+  width: 22px;
+  height: 22px;
+  display: grid;
+  place-items: center;
+  border-radius: 7px;
+  transform: translateY(-50%);
+  background: #e6ebdf;
+  font-size: .7rem;
+  font-weight: 850;
+  pointer-events: none;
+}
+.remove {
+  position: absolute;
+  top: 2px;
+  bottom: 2px;
+  right: 2px;
+  width: 40px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--muted);
+  font-size: 1.2rem;
+}
+.remove:hover { background: #ebeee5; color: var(--ink); }
+.add {
+  min-height: 46px;
+  border: 1px dashed #a5b4a7;
+  border-radius: 10px;
+  color: #284c38;
+  background: transparent;
+  font-size: .87rem;
+  font-weight: 800;
+}
+.add:hover { background: #f0f5e9; border-color: var(--deep); }
+.packs { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 7px; }
+.pack {
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 10px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: #f8f8f1;
+  color: var(--ink);
+  font-size: .83rem;
+  font-weight: 770;
+  text-align: left;
+}
+.pack:hover { border-color: var(--deep); }
+.pack[aria-pressed="true"] { border-color: #49613b; background: #eaf7cc; }
+.pack.chaos { grid-column: 1 / -1; min-height: 47px; }
+.pack-note { margin-left: auto; font-size: .72rem; color: #425743; }
+.pack-check { margin-left: auto; }
+.pack-note + .pack-check { margin-left: 3px; }
+.form-error { margin-top: 9px; color: #91254b; font-weight: 700; font-size: .88rem; }
+.form-error:empty { display: none; }
+.setup-panel .primary { margin-top: 19px; }
+.chat-hero {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  min-height: 642px;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #122f26;
+  border-radius: 24px;
+  padding: 26px;
+  color: #f7fae9;
+  background: radial-gradient(circle at 85% 8%, #355c45, transparent 55%), #18392e;
+  box-shadow: 0 4px 0 #cbd5c3;
+}
+.chat-hero::before {
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  background-image: radial-gradient(#dceec0 1px, transparent 1px);
+  background-size: 18px 18px;
+  opacity: .12;
+  content: "";
+}
+.hero-top { display: flex; align-items: center; gap: 11px; }
+.group-icon {
+  display: grid;
+  width: 42px;
+  height: 42px;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--green);
+  color: var(--ink);
+  font-size: 1.25rem;
+}
+.hero-top strong { display: block; font-size: .97rem; }
+.hero-top small { display: block; color: #ccddcb; font-size: .76rem; }
+.hero-dots { margin-left: auto; color: #dbe9d6; font-size: 1.3rem; }
+.hero-title {
+  margin-top: 43px;
+  max-width: 9ch;
+  font-size: clamp(3.1rem, 5.8vw, 5.3rem);
+  font-weight: 900;
+  letter-spacing: -.075em;
+  line-height: .94;
+}
+.hero-title span { color: var(--green); }
+.chat {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  margin: 32px 0 26px;
+}
+.bubble {
+  max-width: 92%;
+  align-self: flex-start;
+  border-radius: 3px 15px 15px;
+  padding: 9px 13px;
+  color: var(--ink);
+  background: #f3f4e7;
+  font-size: .94rem;
+  box-shadow: 0 3px 7px #0d221c36;
+}
+.bubble b { display: block; margin-bottom: 1px; color: #3d6551; font-size: .72rem; }
+.bubble.out { align-self: flex-end; border-radius: 15px 3px 15px 15px; background: var(--green); }
+.bubble.out span { margin-left: 7px; color: #37584c; font-weight: 850; letter-spacing: -.2em; }
+.bubble.last { background: var(--pink); transform: rotate(-3deg); margin: 4px 0 0 7px; }
+.bubble.last b { color: #6c3157; }
+.hero-footer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  margin-top: auto;
+  border-top: 1px solid #dbe9d633;
+  padding-top: 15px;
+  color: #deebd9;
+  font-size: .76rem;
+  font-weight: 750;
+}
+.game { width: min(100%, 740px); margin-inline: auto; }
+.game.narrow { width: min(100%, 530px); }
+.round-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px 12px;
+  margin-bottom: 13px;
+  color: var(--muted);
+  font-size: .82rem;
+  font-weight: 770;
+}
+.progress { height: 6px; margin: 0 0 18px; border-radius: 99px; background: #dfe6d9; overflow: hidden; }
+.progress div { height: 100%; border-radius: inherit; background: #4e7d54; }
+.panel { padding: clamp(20px, 5vw, 33px); }
+.turn-panel { text-align: center; }
+.turn-panel .button.block { margin-top: 21px; }
+.turn-panel .turn-label { color: #41614d; justify-content: center; margin-bottom: 8px; }
+.turn-panel h1, .phase-title { font-size: clamp(2.35rem, 7vw, 4.25rem); letter-spacing: -.07em; font-weight: 900; }
+.turn-panel p.muted { margin-top: 10px; }
+.turn-icon {
+  display: grid;
+  width: 76px;
+  height: 72px;
+  place-items: center;
+  margin: 0 auto 22px;
+  border: 1px solid #b2c791;
+  border-radius: 23px;
+  background: var(--green);
+  font-size: 2rem;
+  transform: rotate(-6deg);
+}
+.question-bubble {
+  margin-top: 12px;
+  border: 1px solid #c9d7c4;
+  border-radius: 5px 18px 18px;
+  padding: 17px;
+  background: #ebf2e8;
+  color: var(--ink);
+  font: 850 clamp(1.32rem, 4.4vw, 2rem)/1.15 var(--display);
+  letter-spacing: -.035em;
+}
+.answer-form { margin-top: 20px; }
+.answer-form .section-top { font-size: .85rem; font-weight: 770; }
+.answer-input { min-height: 55px; }
+.word-count { color: var(--muted); font-variant-numeric: tabular-nums; }
+.word-count.over { color: #91254b; font-weight: 900; }
+.answer-form .primary, .vote-form .primary { margin-top: 15px; }
+.phase-head { margin-bottom: 20px; }
+.phase-head .kicker { margin-bottom: 8px; }
+.phase-head .muted { margin-top: 8px; }
+.receipt-grid, .vote-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+.receipt-grid { margin-top: 13px; }
+.receipt, .candidate {
+  min-width: 0;
+  min-height: 65px;
+  border: 1px solid var(--line);
+  border-radius: 13px;
+  padding: 11px 13px;
+  background: var(--card);
+  color: var(--ink);
+  text-align: left;
+}
+.receipt:hover, .candidate:hover { border-color: var(--deep); }
+.receipt[aria-pressed="true"] { border-color: #934571; background: #fce5f0; }
+.receipt b, .receipt span { display: block; overflow-wrap: anywhere; }
+.receipt b { color: #43604d; font-size: .76rem; }
+.receipt span { margin-top: 4px; font-size: 1.08rem; font-weight: 820; }
+.receipt.flip {
+  animation: flip-in .47s cubic-bezier(.2,.7,.2,1) backwards;
+  animation-delay: calc(var(--order) * 50ms);
+}
+@keyframes flip-in {
+  from { opacity: 0; transform: perspective(600px) rotateY(-80deg) translateY(8px); }
+  to { opacity: 1; transform: perspective(600px) rotateY(0); }
+}
+.discussion-controls { display: flex; gap: 8px; margin-top: 16px; }
+.discussion-controls .primary { flex: 1; }
+.timer { font-variant-numeric: tabular-nums; }
+.hot-seat {
+  margin-top: 14px;
+  padding: 13px 15px;
+  border: 1px solid #dca1bc;
+  border-radius: 12px;
+  background: #fbe6ef;
+}
+.hot-seat[hidden] { display: none; }
+.hot-seat strong { display: block; overflow-wrap: anywhere; }
+.hot-seat p { margin-top: 2px; font-size: .88rem; color: #663950; }
+.candidate { display: flex; align-items: center; gap: 9px; font-weight: 780; }
+.candidate[aria-pressed="true"] { border-color: var(--deep); background: #eaf7cc; }
+.avatar {
+  display: grid;
+  flex: 0 0 31px;
+  height: 31px;
+  place-items: center;
+  border-radius: 50%;
+  background: #e7eddf;
+  font-size: .75rem;
+}
+.vote-form { margin-top: 17px; }
+.reveal-hero {
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 14px;
+  border: 1px solid var(--deep);
+  border-radius: 22px;
+  padding: clamp(22px, 6vw, 40px);
+  color: #f5faeb;
+  background: radial-gradient(circle at 95% 0%, #436d49 0%, transparent 62%), var(--deep);
+  animation: reveal-in .4s ease-out backwards;
+}
+.reveal-hero.escape { color: #321e2c; border-color: #ad6489; background: var(--pink); }
+.reveal-hero .kicker { margin-bottom: 9px; }
+.reveal-hero h1 { color: var(--green); }
+.reveal-hero.escape h1 { color: #49213c; }
+.reveal-hero p { margin-top: 10px; }
+@keyframes reveal-in {
+  from { opacity: 0; transform: scale(.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+.question-compare, .result-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.compare-card { display: flex; flex-direction: column; border: 1px solid #c9d7c4; border-radius: 15px; padding: clamp(10px, 3vw, 17px); background: #ebf2e8; }
+.compare-card + .compare-card { border-color: #e5bad1; background: #fae8f1; }
+.compare-card .kicker { font-size: .66rem; letter-spacing: .075em; }
+.compare-card h2 { margin: 8px 0 13px; font-size: clamp(.98rem, 3vw, 1.45rem); letter-spacing: -.04em; }
+.compare-answer { margin-top: auto; border-top: 1px solid #69796c40; padding-top: 9px; font-size: clamp(.9rem, 3vw, 1.2rem); }
+.result-grid { margin: 12px 0 16px; }
+.result-grid .panel { padding: clamp(11px, 3vw, 18px); }
+.result-grid h2 { font-size: 1.1rem; letter-spacing: -.04em; }
+.tally { padding: 0; margin: 9px 0 0; list-style: none; }
+.tally li { display: flex; justify-content: space-between; align-items: baseline; gap: 5px; padding: 5px 0; border-bottom: 1px solid #e6eadf; font-size: .85rem; }
+.tally li:last-child { border-bottom: 0; }
+.tally b { white-space: nowrap; }
+.gain { margin-right: 5px; border-radius: 6px; padding: 2px 4px; background: #eaf7cc; color: #35563b; font-size: .72rem; }
+dialog {
+  width: min(480px, calc(100% - 30px));
+  max-height: calc(100% - 24px);
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  padding: 23px;
+  color: var(--ink);
+  background: var(--card);
+}
+dialog::backdrop { background: #172c2485; }
+dialog h2 { font-size: 1.65rem; letter-spacing: -.055em; }
+dialog ol { margin: 13px 0 19px; padding-left: 21px; }
+dialog li + li { margin-top: 7px; }
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+@media (max-width: 850px) {
+  .setup-grid { gap: 20px; }
+  .chat-hero { padding: 20px; }
+  .pack { padding-inline: 8px; }
+}
+@media (max-width: 680px) {
+  .shell { width: calc(100% - 28px); }
+  .header-inner { min-height: 61px; }
+  .brand { font-size: 1.15rem; gap: 8px; }
+  .logo { width: 34px; height: 30px; font-size: 1.2rem; }
+  main { padding-block: 24px 38px; }
+  .setup-grid { grid-template-columns: 1fr; }
+  .intro { margin-bottom: 16px; }
+  .intro h1 { margin-top: 8px; font-size: clamp(2.35rem, 10vw, 3.55rem); }
+  .intro p { font-size: .9rem; }
+  .setup-panel { padding: 15px; }
+  .chat-hero { min-height: auto; }
+  .hero-title { max-width: none; margin-top: 19px; font-size: 2.55rem; }
+  .chat { margin: 16px 0 20px; }
+  .discussion-controls { flex-wrap: wrap; }
+  .discussion-controls .primary { flex-basis: 100%; }
+}
+@media (max-width: 350px) {
+  .names, .packs { grid-template-columns: 1fr; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; animation-delay: 0ms !important; }
+}
+</style>
+</head>
+<body>
+<header class="site-header">
+  <div class="shell header-inner">
+    <div class="brand"><span class="logo" aria-hidden="true">?</span> Kaun Sus Hai?</div>
+    <button class="button help" id="show-help" type="button"><span class="help-icon" aria-hidden="true">?</span> How to Play</button>
+  </div>
+</header>
+<main id="app" class="shell"></main>
+<dialog id="help" aria-labelledby="help-heading">
+  <h2 id="help-heading">How to Play</h2>
+  <ol>
+    <li>Enter 3–12 names and choose a pack. One person secretly gets a different question.</li>
+    <li>Pass the phone. Open your question in private and answer in 1–5 words.</li>
+    <li>Read everyone’s answers together. Tap one to put its author in the Hot Seat.</li>
+    <li>Pass the phone again and vote in private. You can’t vote for yourself.</li>
+    <li>If the imposter alone gets the most votes, everyone else earns 1 point. If the imposter escapes, they earn 2 points. A tie for first counts as an escape.</li>
+  </ol>
+  <form method="dialog"><button class="button primary block" autofocus>Got it</button></form>
+</dialog>
+<script type="application/json" id="question-packs">
+[
+  {
+    "name": "Group Chat Drama",
+    "icon": "💬",
+    "pairs": [
+      [
+        "What would you bring to a house party?",
+        "What would you bring to a breakup debrief?"
+      ],
+      [
+        "What would you mute the group chat over?",
+        "What would you open the group chat at 2 a.m. for?"
+      ],
+      [
+        "What do you send when plans finally get confirmed?",
+        "What do you send when the same plans get cancelled again?"
+      ],
+      [
+        "What would you hide before your flatmates’ parents visit?",
+        "What would your flatmates put on the dining table to start an argument?"
+      ],
+      [
+        "What would you pin in the group chat before a trip?",
+        "What would you pin in the chat after the trip goes wrong?"
+      ],
+      [
+        "What would you text from bed when you’re already late?",
+        "What would you text from the venue when the others are already late?"
+      ],
+      [
+        "Who gets trusted with the group chat’s secrets?",
+        "Who would accidentally send a group chat screenshot back to the group?"
+      ],
+      [
+        "What would make you leave a flatmate group chat?",
+        "What would make you finally reply to a flatmate group chat?"
+      ],
+      [
+        "What do you say when the group picks a terrible plan?",
+        "What do you say when your crush suggests the same plan?"
+      ],
+      [
+        "What gets the most reactions in your group chat?",
+        "What should never get forwarded to the family chat?"
+      ]
+    ]
+  },
+  {
+    "name": "College & First Job",
+    "icon": "🎒",
+    "pairs": [
+      [
+        "What’s your excuse for being late to work?",
+        "What’s your excuse for disappearing from the group chat?"
+      ],
+      [
+        "What do you keep in your bag for a long metro commute?",
+        "What do you pull out to survive a painfully long lecture?"
+      ],
+      [
+        "What would you offer a friend for help with a last-minute assignment?",
+        "What would you offer a colleague to cover your Friday shift?"
+      ],
+      [
+        "What would you say after being asked about your low attendance?",
+        "What would you say after being caught taking a nap at work?"
+      ],
+      [
+        "Where do you go to quietly take a personal call at work?",
+        "Where do you go to quietly cry after seeing your marks?"
+      ],
+      [
+        "What would you take to a campus placement interview?",
+        "What would you pack for your first day at a new job?"
+      ],
+      [
+        "What makes a lecture feel like it’ll never end?",
+        "What makes the Monday team meeting feel like it’ll never end?"
+      ],
+      [
+        "What would you text when your teammate asks if the slides are ready?",
+        "What would you text when your manager asks if you’ve reached the office?"
+      ],
+      [
+        "What would you eat outside college after a brutal exam?",
+        "What would you eat outside the office after getting your first salary?"
+      ],
+      [
+        "What would you do with a free period after lunch?",
+        "What would you do during a suspiciously quiet day at work?"
+      ]
+    ]
+  },
+  {
+    "name": "Dating & Situationships",
+    "icon": "💘",
+    "pairs": [
+      [
+        "What would you order on a first date?",
+        "What would you order after getting dumped?"
+      ],
+      [
+        "What do you check before agreeing to a second date?",
+        "What do you check before swiping right?"
+      ],
+      [
+        "What would you text after a surprisingly good date?",
+        "What would you text after your friend finally blocks their ex?"
+      ],
+      [
+        "Where would you take a date if you wanted a long conversation?",
+        "Where would you go with your best friend to overanalyse one text?"
+      ],
+      [
+        "What would you give someone you’ve just started seeing?",
+        "What would you give a friend who just ended a situationship?"
+      ],
+      [
+        "What would make you leave a date early?",
+        "What would make you leave an office party early?"
+      ],
+      [
+        "Who would you call before replying to “I miss you”?",
+        "Who would you call when you realise you sent “I miss you” to the wrong person?"
+      ],
+      [
+        "What do you put on before a first date?",
+        "What do you put on when you know your ex will be at the party?"
+      ],
+      [
+        "What do you hide from your parents before bringing a date home?",
+        "What do you hide from your date before lending them your phone?"
+      ],
+      [
+        "What would you say after someone asks “What are we?”",
+        "What would you say when the waiter asks if you’re splitting the bill?"
+      ]
+    ]
+  },
+  {
+    "name": "Food & Delivery",
+    "icon": "🍟",
+    "pairs": [
+      [
+        "What would you order when everyone says they aren’t hungry?",
+        "What would you order just to hit the free delivery minimum?"
+      ],
+      [
+        "What disappears first when a takeaway order arrives?",
+        "What do you claim is yours before anyone opens the bags?"
+      ],
+      [
+        "What do you put extra chutney on?",
+        "What do you eat over the sink so nobody sees the mess?"
+      ],
+      [
+        "What would you get from a roadside stall after work?",
+        "What would you detour for on the way home after a bad date?"
+      ],
+      [
+        "What would you eat cold straight from the fridge?",
+        "What would you pack for lunch if the office microwave was broken?"
+      ],
+      [
+        "What would you cook for a flatmate who says they can’t handle spice?",
+        "What would you make at midnight with an almost empty kitchen?"
+      ],
+      [
+        "What would you ask a restaurant to send extra of?",
+        "What would you keep from a takeaway bag for your next meal?"
+      ],
+      [
+        "What would you order for the friend who says “kuch bhi”?",
+        "What would you order to settle a fight over where to eat?"
+      ],
+      [
+        "What would make you give a delivery order five stars?",
+        "What would make you order from the same place three days in a row?"
+      ],
+      [
+        "What would you eat on a train ride home?",
+        "What would you smuggle into the cinema in your bag?"
+      ]
+    ]
+  },
+  {
+    "name": "Shaadi & Family",
+    "icon": "🎊",
+    "pairs": [
+      [
+        "Where would you hide from a nosy relative at a wedding?",
+        "Where would you go to hear the best wedding gossip?"
+      ],
+      [
+        "What would you get seconds of at a wedding buffet?",
+        "What would you sneak home from a wedding buffet?"
+      ],
+      [
+        "Who would you ask to save you a seat at a wedding?",
+        "Who would you ask to cover for you if you left the wedding early?"
+      ],
+      [
+        "What would you say to “Beta, shaadi kab karoge?”",
+        "What would you say when someone asks when you’ll pay back ₹500?"
+      ],
+      [
+        "What would you carry in your bag to a sangeet?",
+        "What would you lend your cousin after three hours on the dance floor?"
+      ],
+      [
+        "What would you wear to a cousin’s wedding reception?",
+        "What would you wear if your family announced a group photo in five minutes?"
+      ],
+      [
+        "What would make you actually read the family WhatsApp group?",
+        "What would make you send a message in the family WhatsApp group?"
+      ],
+      [
+        "What do you ask a visiting relative to bring from home?",
+        "What do you hope your parents have packed for your train ride back?"
+      ],
+      [
+        "What would get an aunty to stop asking about your job?",
+        "What would get an aunty to leave the buffet queue?"
+      ],
+      [
+        "What do you do when your favourite song comes on at a sangeet?",
+        "What do you do when someone points a wedding camera at you?"
+      ]
+    ]
+  },
+  {
+    "name": "Broke by Month-End",
+    "icon": "💸",
+    "pairs": [
+      [
+        "What do you buy as soon as your salary hits?",
+        "What do you regret spending on by month-end?"
+      ],
+      [
+        "What would you text a friend who forgot the UPI split?",
+        "What would you text a friend who forgot your birthday?"
+      ],
+      [
+        "What do you buy in bulk with your flatmates?",
+        "What do you hoard when you find a good discount?"
+      ],
+      [
+        "What would you make for dinner two days before payday?",
+        "What would you cook to impress someone on a ₹100 budget?"
+      ],
+      [
+        "What purchase would you hide from the friend you still owe money?",
+        "What purchase would you call “an investment” to justify it to your parents?"
+      ],
+      [
+        "What would make you cancel a subscription?",
+        "What would make you finally delete a shopping app?"
+      ],
+      [
+        "What would you spend your last ₹200 on after a long day?",
+        "What would you bring to a potluck with a ₹200 budget?"
+      ],
+      [
+        "Where would you hang out for free on a Saturday?",
+        "Where would you go if your UPI stopped working mid-outing?"
+      ],
+      [
+        "What would you ask a flatmate to split?",
+        "What would you ask a flatmate to buy on the way home?"
+      ],
+      [
+        "What do you remove from your cart when you see the total?",
+        "What do you add to your cart after saying “I’m just browsing”?"
+      ]
+    ]
+  },
+  {
+    "name": "Travel & Outings",
+    "icon": "🚇",
+    "pairs": [
+      [
+        "What do you pack for a day trip with friends?",
+        "What do you pack for a commute during monsoon season?"
+      ],
+      [
+        "What would you do if you missed the last metro?",
+        "What would you do if your auto dropped you on the wrong side of town?"
+      ],
+      [
+        "What do you buy at a railway station before a long journey?",
+        "What do you buy when your bus stops for only five minutes?"
+      ],
+      [
+        "What would you message the group when you get to the wrong café?",
+        "What would you message when you get off at the wrong metro stop?"
+      ],
+      [
+        "What do you look for when booking a weekend stay?",
+        "What do you look for when picking a café to work from?"
+      ],
+      [
+        "What would you take to a picnic that might get rained out?",
+        "What would you keep handy during a power cut at home?"
+      ],
+      [
+        "Who would you put in charge of directions on a road trip?",
+        "Who would you blame when everyone gets on the wrong train?"
+      ],
+      [
+        "What would you take photos of on a weekend away?",
+        "What would you photograph as proof that the trip was a disaster?"
+      ],
+      [
+        "What would you say to someone who wants to leave for the airport four hours early?",
+        "What would you say to someone who arrives four hours early for a party?"
+      ],
+      [
+        "What would make you switch seats on a long train ride?",
+        "What would make you move tables halfway through dinner?"
+      ]
+    ]
+  },
+  {
+    "name": "Flatmate Files",
+    "icon": "🗝️",
+    "pairs": [
+      [
+        "What would you label with your name in a shared kitchen?",
+        "What would you rescue first if the fridge stopped working?"
+      ],
+      [
+        "What would you borrow from a flatmate before an interview?",
+        "What would you borrow from a flatmate before meeting your partner’s parents?"
+      ],
+      [
+        "What would you move out of sight before a video call?",
+        "What would you shove into a cupboard when the landlord comes over?"
+      ],
+      [
+        "What would you ask for before agreeing to host a party in your flat?",
+        "What would you ask for before letting a friend crash for a week?"
+      ],
+      [
+        "What would you text after coming home to a messy kitchen?",
+        "What would you text after finding your food missing from the fridge?"
+      ],
+      [
+        "What would you lend a new flatmate on moving day?",
+        "What would you ask your flatmate to lend a friend who’s staying over?"
+      ],
+      [
+        "What do you replace when a flatmate moves out?",
+        "What would you replace after a house party got out of hand?"
+      ],
+      [
+        "What would make you knock on your flatmate’s door at midnight?",
+        "What would make you send “Are you awake?” to your flatmate at midnight?"
+      ],
+      [
+        "What would you leave for your flatmate before going home for a week?",
+        "What would you leave for your flatmate as a peace offering?"
+      ],
+      [
+        "What would you save from the kitchen if it started flooding?",
+        "What would you carry to the neighbour’s flat if your gas ran out halfway through cooking?"
+      ]
+    ]
+  },
+  {
+    "name": "Reels & Fandom",
+    "icon": "📱",
+    "pairs": [
+      [
+        "What makes you immediately send a reel to your best friend?",
+        "What makes you immediately delete a reel from the group chat?"
+      ],
+      [
+        "What would you post after your team wins a close match?",
+        "What would you post after your favourite contestant finally gets eliminated?"
+      ],
+      [
+        "What do you check before buying concert tickets?",
+        "What do you check before agreeing to go to a watch party?"
+      ],
+      [
+        "What would you comment on a friend’s dramatic photo dump?",
+        "What would you comment on a friend’s hard launch?"
+      ],
+      [
+        "What would you keep in your bag at a concert?",
+        "What would you pull out during a three-hour film?"
+      ],
+      [
+        "What would you mute your phone for?",
+        "What would you set a screen-time limit for?"
+      ],
+      [
+        "What would you save from a film scene to send as a reaction?",
+        "What would you send instead of typing out an apology?"
+      ],
+      [
+        "What would get you kicked out of a fandom group chat?",
+        "What would start a fight in your family’s cricket group chat?"
+      ],
+      [
+        "What would you post on Close Friends after a bad haircut?",
+        "What would you post on Close Friends after a gym session goes badly?"
+      ],
+      [
+        "What would you do while waiting for concert tickets to go on sale?",
+        "What would you do while waiting for your food order to get accepted?"
+      ]
+    ]
+  }
+]
+</script>
+<script>
+'use strict';
+
+const packs = JSON.parse(document.querySelector('#question-packs').textContent);
+
+const allPairs = packs.flatMap((pack, packIndex) => pack.pairs.map(([group, imposter]) => ({
+  pack: packIndex,
+  group,
+  imposter
+})));
+const state = {
+  phase: 'setup',
+  names: ['', '', ''],
+  pack: -1,
+  players: [],
+  roundNumber: 0,
+  round: null,
+  turn: 0,
+  selectedVote: null
+};
+const app = document.querySelector('#app');
+const help = document.querySelector('#help');
+const discussionDuration = 45;
+let secondsLeft = discussionDuration;
+let timerDeadline = 0;
+let timerInterval = null;
+
+const entities = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' };
+const escapeHtml = (value) => String(value).replace(/[&<>"']/g, (character) => entities[character]);
+const arrow = '<span class="arrow" aria-hidden="true">→</span>';
+const primary = (label, attributes = '') => `<button class="button primary block" ${attributes}>${label} ${arrow}</button>`;
+
+function nameFields() {
+  const canRemove = state.names.length > 3;
+  return state.names.map((name, index) => `
+    <div class="name-field ${canRemove ? 'has-remove' : ''}">
+      <label class="sr-only" for="player-${index}">Player ${index + 1} name</label>
+      <span class="name-index" aria-hidden="true">${index + 1}</span>
+      <input id="player-${index}" data-name="${index}" value="${escapeHtml(name)}"
+        placeholder="Player ${index + 1}" autocomplete="off" dir="auto">
+      ${canRemove ? `<button class="remove" type="button" data-action="remove" data-index="${index}"
+        aria-label="Remove player ${index + 1}">×</button>` : ''}
+    </div>`).join('') + (state.names.length < 12
+      ? '<button class="add" type="button" data-action="add"><span aria-hidden="true">＋</span> Add player</button>'
+      : '');
+}
+
+function packButtons() {
+  return [{ name: 'Full Chaos', icon: '⚡' }, ...packs].map(({ name, icon }, index) => {
+    const packIndex = index - 1;
+    const chaos = packIndex === -1;
+    return `<button class="pack ${chaos ? 'chaos' : ''}" type="button" data-action="pack"
+      data-index="${packIndex}" aria-pressed="${state.pack === packIndex}">
+      <span aria-hidden="true">${icon}</span><span>${name}</span>
+      ${chaos ? `<span class="pack-note">All ${packs.length} packs</span>` : ''}
+      <span class="pack-check" aria-hidden="true">${state.pack === packIndex ? '✓' : ''}</span>
+    </button>`;
+  }).join('');
+}
+
+function setupView() {
+  return `
+    <div class="setup-grid">
+      <section aria-labelledby="screen-title">
+        <div class="intro">
+          <div class="kicker"><span class="status-dot" aria-hidden="true"></span> Round setup</div>
+          <h1 id="screen-title" tabindex="-1">Get the gang together.</h1>
+          <p>One phone, 3–12 friends, and one very sus answer.</p>
+        </div>
+        <form class="setup-panel" id="setup-form" autocomplete="off">
+          <section class="setup-section" aria-labelledby="players-label">
+            <div class="section-top">
+              <h2 id="players-label">Players</h2>
+              <span class="pill" id="player-count">${state.names.length} / 12</span>
+            </div>
+            <div class="names" id="names">${nameFields()}</div>
+          </section>
+          <section class="setup-section" aria-labelledby="packs-label">
+            <div class="section-top"><h2 id="packs-label">Question pack</h2></div>
+            <div class="packs" id="packs">${packButtons()}</div>
+          </section>
+          <p class="form-error" id="setup-error" role="alert"></p>
+          ${primary('Start Round', 'type="submit"')}
+        </form>
+      </section>
+      <aside class="chat-hero" aria-label="The group chat">
+        <div class="hero-top">
+          <span class="group-icon" aria-hidden="true">💬</span>
+          <div><strong>The Group Chat</strong><small>One of you is sus</small></div>
+        </div>
+        <h2 class="hero-title">The chat has <span>receipts.</span></h2>
+        <div class="chat">
+          <div class="bubble"><b>Simran</b> Sab aa gaye?</div>
+          <div class="bubble out">5 mins <span aria-hidden="true">✓✓</span></div>
+          <div class="bubble"><b>Dev</b> Bro you’re still in bed.</div>
+          <div class="bubble last"><b>Simran</b> Explain yourself, respectfully.</div>
+        </div>
+        <div class="hero-footer"><span>${allPairs.length} question pairs</span><span>·</span><span>Pass-the-phone party game</span></div>
+      </aside>
+    </div>`;
+}
+
+function gameView(content, { narrow = false, step = '', progress } = {}) {
+  const pack = state.pack === -1 ? 'Full Chaos' : packs[state.pack].name;
+  return `<div class="game ${narrow ? 'narrow' : ''}">
+    <div class="round-meta">
+      <span class="pill">Round ${state.roundNumber} · ${pack}</span>
+      ${step ? `<span>${step}</span>` : ''}
+    </div>
+    ${progress === undefined ? '' : `<div class="progress" aria-hidden="true">
+      <div style="width: ${progress * 100}%"></div>
+    </div>`}
+    ${content}
+  </div>`;
+}
+
+function turnOptions(voting) {
+  return {
+    narrow: true,
+    step: `${voting ? 'Vote' : 'Answer'} ${state.turn + 1} of ${state.players.length}`,
+    progress: state.turn / state.players.length
+  };
+}
+
+function passView(voting) {
+  const name = escapeHtml(state.players[state.turn].name);
+  return gameView(`
+    <section class="panel turn-panel" aria-labelledby="screen-title">
+      <div class="turn-icon" aria-hidden="true">📲</div>
+      <p class="turn-label kicker">${voting ? 'Secret vote' : 'Private question'}</p>
+      <h1 id="screen-title" tabindex="-1">Pass to <bdi>${name}</bdi></h1>
+      <p class="muted">Tap when the phone is in your hands.</p>
+      ${primary(voting ? 'Show My Ballot' : 'Show My Question', 'type="button" data-action="open-turn"')}
+    </section>`, turnOptions(voting));
+}
+
+function answerView() {
+  const player = state.players[state.turn];
+  const question = state.turn === state.round.imposter ? state.round.pair.imposter : state.round.pair.group;
+  return gameView(`
+    <section class="panel" aria-labelledby="screen-title">
+      <p class="kicker"><bdi>${escapeHtml(player.name)}</bdi>, your question</p>
+      <h1 id="screen-title" class="question-bubble" tabindex="-1">${escapeHtml(question)}</h1>
+      <form class="answer-form" id="answer-form" autocomplete="off">
+        <div class="section-top">
+          <label for="answer">Your answer · 1–5 words</label>
+          <span class="word-count" id="word-count" aria-hidden="true">0 / 5</span>
+        </div>
+        <input class="answer-input" id="answer" placeholder="Type your answer" dir="auto"
+          autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="done"
+          aria-describedby="answer-error">
+        <p class="form-error" id="answer-error" role="alert"></p>
+        ${primary('Lock In Answer', 'type="submit"')}
+      </form>
+    </section>`, turnOptions(false));
+}
+
+function discussionView() {
+  return gameView(`
+    <div class="phase-head">
+      <h1 class="phase-title" id="screen-title" tabindex="-1">The receipts</h1>
+      <p class="muted">Tap an answer to put its author in the Hot Seat.</p>
+    </div>
+    <section class="panel" aria-label="Group question and answers">
+      <p class="kicker">Group question</p>
+      <h2 class="question-bubble">${escapeHtml(state.round.pair.group)}</h2>
+      <div class="receipt-grid">
+        ${state.players.map(({ name }, index) => `
+          <button class="receipt flip" type="button" data-action="hot-seat" data-index="${index}"
+            aria-pressed="false" style="--order:${index}">
+            <b dir="auto">${escapeHtml(name)}</b>
+            <span dir="auto">${escapeHtml(state.round.answers[index])}</span>
+          </button>`).join('')}
+      </div>
+      <div class="hot-seat" id="hot-seat" aria-live="polite" hidden></div>
+      <div class="discussion-controls">
+        <button class="button timer" type="button" data-action="timer" id="timer">Start 45s timer</button>
+        <button class="button" type="button" data-action="reset-timer" id="timer-reset" hidden>Reset</button>
+        <button class="button primary" type="button" data-action="vote-now">Vote Now ${arrow}</button>
+      </div>
+      <p class="sr-only" id="timer-announcement" role="status"></p>
+    </section>`);
+}
+
+function voteView() {
+  return gameView(`
+    <section class="panel" aria-labelledby="screen-title">
+      <div class="phase-head">
+        <p class="kicker"><bdi>${escapeHtml(state.players[state.turn].name)}</bdi>, your secret vote</p>
+        <h1 class="phase-title" id="screen-title" tabindex="-1">Kaun sus hai?</h1>
+        <p class="muted">Pick one other player.</p>
+      </div>
+      <form class="vote-form" id="vote-form">
+        <div class="vote-grid" role="group" aria-label="Vote for a player">
+          ${state.players.map(({ name }, index) => index === state.turn ? '' : `
+            <button class="candidate" type="button" data-action="candidate" data-index="${index}" aria-pressed="false">
+              <span class="avatar" aria-hidden="true">${escapeHtml(Array.from(name)[0].toLocaleUpperCase())}</span>
+              <bdi class="breakable">${escapeHtml(name)}</bdi>
+            </button>`).join('')}
+        </div>
+        ${primary('Lock In Vote', 'type="submit" disabled')}
+      </form>
+    </section>`, turnOptions(true));
+}
+
+function sharedHandoffView(voting) {
+  return gameView(`
+    <section class="panel turn-panel" aria-labelledby="screen-title">
+      <div class="turn-icon" aria-hidden="true">👀</div>
+      <h1 id="screen-title" tabindex="-1">${voting ? 'Votes' : 'Answers'} are in.</h1>
+      <p class="muted">Put the phone where everyone can see.</p>
+      ${voting ? primary('Reveal the Imposter', 'type="button" data-action="reveal"')
+        : primary('Show the Receipts', 'type="button" data-action="show-receipts"')}
+    </section>`, { narrow: true });
+}
+
+function revealView() {
+  const { imposter, pair, answers, tally, caught, tied, gains } = state.round;
+  const answer = escapeHtml(answers[imposter]);
+  const orderByVotes = state.players.map((_, index) => index).sort((a, b) => tally[b] - tally[a]);
+  const orderByScore = state.players.map((_, index) => index).sort((a, b) => state.players[b].score - state.players[a].score);
+  const verdict = caught ? 'The group caught the imposter.' : tied
+    ? 'A tie for first. The imposter escaped.' : 'The group guessed wrong. The imposter escaped.';
+  return gameView(`
+    <section class="reveal-hero ${caught ? '' : 'escape'}" aria-labelledby="screen-title">
+      <p class="kicker">The imposter was</p>
+      <h1 class="phase-title" id="screen-title" tabindex="-1"><bdi>${escapeHtml(state.players[imposter].name)}</bdi></h1>
+      <p>${verdict}</p>
+    </section>
+    <div class="question-compare" aria-label="Both questions with the imposter’s answer">
+      ${[['Group question', pair.group], ['Imposter question', pair.imposter]].map(([label, question]) => `
+        <section class="compare-card">
+          <p class="kicker">${label}</p>
+          <h2>${escapeHtml(question)}</h2>
+          <strong class="compare-answer breakable" dir="auto">“${answer}”</strong>
+        </section>`).join('')}
+    </div>
+    <div class="result-grid">
+      <section class="panel" aria-labelledby="tally-heading">
+        <h2 id="tally-heading">Vote tally</h2>
+        <ul class="tally">
+          ${orderByVotes.map((index) => `<li><bdi class="breakable">${escapeHtml(state.players[index].name)}</bdi>
+            <b aria-label="${tally[index]} ${tally[index] === 1 ? 'vote' : 'votes'}">${tally[index]}</b></li>`).join('')}
+        </ul>
+      </section>
+      <section class="panel" aria-labelledby="scores-heading">
+        <h2 id="scores-heading">Scores</h2>
+        <ul class="tally">
+          ${orderByScore.map((index) => `<li><bdi class="breakable">${escapeHtml(state.players[index].name)}</bdi>
+            <b>${gains[index] ? `<span class="gain">+${gains[index]}</span>` : ''}${state.players[index].score}</b></li>`).join('')}
+        </ul>
+      </section>
+    </div>
+    ${primary('Play Again', 'type="button" data-action="again"')}`);
+}
+
+const views = {
+  setup: setupView,
+  'answer-pass': () => passView(false),
+  answer: answerView,
+  'answers-in': () => sharedHandoffView(false),
+  discussion: discussionView,
+  'vote-pass': () => passView(true),
+  vote: voteView,
+  suspense: () => sharedHandoffView(true),
+  reveal: revealView
+};
+
+function go(phase) {
+  state.phase = phase;
+  app.innerHTML = views[phase]();
+  if (phase !== 'setup') {
+    window.scrollTo(0, 0);
+    document.querySelector('#screen-title').focus({ preventScroll: true });
+  }
+}
+
+function shuffle(items) {
+  const shuffled = [...items];
+  for (let index = shuffled.length - 1; index > 0; index--) {
+    const swap = Math.floor(Math.random() * (index + 1));
+    [shuffled[index], shuffled[swap]] = [shuffled[swap], shuffled[index]];
+  }
+  return shuffled;
+}
+
+let pairQueue = [];
+
+function nextPair() {
+  if (pairQueue.length === 0) {
+    const pool = allPairs.filter((pair) => state.pack === -1 || pair.pack === state.pack);
+    pairQueue = shuffle(pool);
+    if (pairQueue[0] === state.round?.pair) {
+      [pairQueue[0], pairQueue[1]] = [pairQueue[1], pairQueue[0]];
+    }
+  }
+  return pairQueue.shift();
+}
+
+function startRound() {
+  state.round = {
+    pair: nextPair(),
+    imposter: Math.floor(Math.random() * state.players.length),
+    answers: [],
+    votes: []
+  };
+  state.roundNumber++;
+  state.turn = 0;
+  state.selectedVote = null;
+  secondsLeft = discussionDuration;
+  go('answer-pass');
+}
+
+function startGame() {
+  const names = [...document.querySelectorAll('[data-name]')].map((input) => input.value.trim());
+  const error = document.querySelector('#setup-error');
+  const keys = new Set();
+  for (const [index, name] of names.entries()) {
+    const key = name.normalize('NFC').replace(/\s+/gu, ' ').toLocaleLowerCase();
+    if (!key || keys.has(key)) {
+      error.textContent = key ? 'Give each player a different name or nickname.' : 'Enter a name for every player.';
+      document.querySelector(`#player-${index}`).focus();
+      return;
+    }
+    keys.add(key);
+  }
+  state.players = names.map((name) => ({ name, score: 0 }));
+  startRound();
+}
+
+function countWords(value) {
+  return value.trim().split(/\s+/u).filter((token) => /[\p{L}\p{N}]/u.test(token)).length;
+}
+
+function lockAnswer() {
+  const input = document.querySelector('#answer');
+  const answer = input.value.trim();
+  const count = countWords(answer);
+  if (count < 1 || count > 5) {
+    document.querySelector('#answer-error').textContent = 'Enter an answer in 1–5 words.';
+    input.setAttribute('aria-invalid', 'true');
+    input.focus();
+    return;
+  }
+  state.round.answers[state.turn] = answer;
+  state.turn++;
+  go(state.turn === state.players.length ? 'answers-in' : 'answer-pass');
+}
+
+function showHotSeat(button, index) {
+  const active = button.getAttribute('aria-pressed') === 'true';
+  for (const receipt of app.querySelectorAll('.receipt')) receipt.setAttribute('aria-pressed', 'false');
+  const seat = document.querySelector('#hot-seat');
+  seat.hidden = active;
+  seat.innerHTML = active ? '' : `<strong>🔥 Hot Seat · <bdi>${escapeHtml(state.players[index].name)}</bdi></strong>
+    <p>Explain yourself, respectfully.</p>`;
+  if (!active) button.setAttribute('aria-pressed', 'true');
+}
+
+function stopTimer() {
+  clearInterval(timerInterval);
+  timerInterval = null;
+}
+
+function updateTimer() {
+  const button = document.querySelector('#timer');
+  const reset = document.querySelector('#timer-reset');
+  if (secondsLeft === discussionDuration && timerInterval === null) {
+    button.textContent = 'Start 45s timer';
+  } else if (secondsLeft === 0) {
+    button.textContent = 'Time’s up · Restart';
+  } else {
+    const time = `0:${String(secondsLeft).padStart(2, '0')}`;
+    button.textContent = `${timerInterval === null ? 'Resume' : 'Pause'} ${time}`;
+  }
+  reset.hidden = secondsLeft === discussionDuration && timerInterval === null;
+}
+
+function tickTimer() {
+  secondsLeft = Math.max(0, Math.ceil((timerDeadline - Date.now()) / 1000));
+  if (secondsLeft === 0) {
+    stopTimer();
+    document.querySelector('#timer-announcement').textContent = 'Discussion time is up.';
+  }
+  updateTimer();
+}
+
+function toggleTimer() {
+  if (timerInterval !== null) {
+    tickTimer();
+    stopTimer();
+  } else {
+    if (secondsLeft === 0) secondsLeft = discussionDuration;
+    document.querySelector('#timer-announcement').textContent = '';
+    timerDeadline = Date.now() + secondsLeft * 1000;
+    timerInterval = setInterval(tickTimer, 150);
+  }
+  updateTimer();
+}
+
+function beginVoting() {
+  stopTimer();
+  state.turn = 0;
+  go('vote-pass');
+}
+
+function chooseCandidate(button, index) {
+  state.selectedVote = index;
+  for (const candidate of app.querySelectorAll('.candidate')) {
+    candidate.setAttribute('aria-pressed', String(candidate === button));
+  }
+  document.querySelector('#vote-form [type="submit"]').disabled = false;
+}
+
+function lockVote() {
+  if (state.selectedVote === null || state.selectedVote === state.turn) return;
+  state.round.votes[state.turn] = state.selectedVote;
+  state.selectedVote = null;
+  state.turn++;
+  go(state.turn === state.players.length ? 'suspense' : 'vote-pass');
+}
+
+function finishRound() {
+  const { imposter, votes } = state.round;
+  const tally = state.players.map(() => 0);
+  for (const vote of votes) tally[vote]++;
+  const top = Math.max(...tally);
+  const tied = tally.filter((votesReceived) => votesReceived === top).length > 1;
+  const caught = tally[imposter] === top && !tied;
+  const gains = state.players.map((player, index) => {
+    const gain = caught ? Number(index !== imposter) : (index === imposter ? 2 : 0);
+    player.score += gain;
+    return gain;
+  });
+  Object.assign(state.round, { tally, tied, caught, gains });
+  go('reveal');
+}
+
+function refreshNames(focusIndex) {
+  document.querySelector('#names').innerHTML = nameFields();
+  document.querySelector('#player-count').textContent = `${state.names.length} / 12`;
+  document.querySelector('#setup-error').textContent = '';
+  document.querySelector(`#player-${focusIndex}`).focus();
+}
+
+app.addEventListener('input', (event) => {
+  const input = event.target;
+  if (input.matches('[data-name]')) {
+    state.names[Number(input.dataset.name)] = input.value;
+    document.querySelector('#setup-error').textContent = '';
+  }
+  if (input.id === 'answer') {
+    const count = countWords(input.value);
+    const counter = document.querySelector('#word-count');
+    counter.textContent = `${count} / 5`;
+    counter.classList.toggle('over', count > 5);
+    input.removeAttribute('aria-invalid');
+    document.querySelector('#answer-error').textContent = '';
+  }
+});
+
+app.addEventListener('submit', (event) => {
+  event.preventDefault();
+  switch (event.target.id) {
+    case 'setup-form': startGame(); break;
+    case 'answer-form': lockAnswer(); break;
+    case 'vote-form': lockVote(); break;
+  }
+});
+
+app.addEventListener('click', (event) => {
+  const button = event.target.closest('button[data-action]');
+  if (!button) return;
+  const index = Number(button.dataset.index);
+  switch (button.dataset.action) {
+    case 'add':
+      state.names.push('');
+      refreshNames(state.names.length - 1);
+      break;
+    case 'remove':
+      state.names.splice(index, 1);
+      refreshNames(Math.min(index, state.names.length - 1));
+      break;
+    case 'pack':
+      state.pack = index;
+      for (const pack of app.querySelectorAll('[data-action="pack"]')) {
+        pack.setAttribute('aria-pressed', String(pack === button));
+        pack.querySelector('.pack-check').textContent = pack === button ? '✓' : '';
+      }
+      break;
+    case 'open-turn':
+      go(state.phase === 'answer-pass' ? 'answer' : 'vote');
+      break;
+    case 'show-receipts':
+      go('discussion');
+      break;
+    case 'hot-seat':
+      showHotSeat(button, index);
+      break;
+    case 'timer':
+      toggleTimer();
+      break;
+    case 'reset-timer':
+      stopTimer();
+      secondsLeft = discussionDuration;
+      document.querySelector('#timer-announcement').textContent = '';
+      updateTimer();
+      document.querySelector('#timer').focus();
+      break;
+    case 'vote-now':
+      beginVoting();
+      break;
+    case 'candidate':
+      chooseCandidate(button, index);
+      break;
+    case 'reveal':
+      finishRound();
+      break;
+    case 'again':
+      startRound();
+      break;
+  }
+});
+
+document.querySelector('#show-help').addEventListener('click', () => help.showModal());
+go('setup');
+</script>
+</body>
+</html>

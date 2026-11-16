@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#e9e7e0">
+  <title>Kaun Sus Hai? · Private Room</title>
+  <link rel="stylesheet" href="/theme.css">
+  <script src="/qr.js" defer></script>
+  <script src="/online.js" defer></script>
+</head>
+<body>
+  <header class="site-header">
+    <div class="shell header-inner">
+      <button class="brand room-home" id="room-home" type="button" aria-label="Kaun Sus Hai? homepage" disabled><span class="ship-mark" aria-hidden="true"><span></span></span> Kaun Sus Hai?</button>
+      <div class="online-header-actions">
+        <button class="button help" id="share-invite" type="button" hidden>Invite Player</button>
+        <button class="button help" id="start-new-game" type="button" hidden>Start New Game</button>
+        <button class="button help" id="show-help" type="button"><span class="help-icon" aria-hidden="true">?</span> How to Play</button>
+        <button class="button help theme-toggle" id="music-toggle" type="button" aria-label="Game audio" aria-pressed="false" title="Turn on game audio"><span aria-hidden="true">♪</span></button>
+        <button class="button help theme-toggle" id="theme-toggle" type="button" aria-label="Dark mode" aria-pressed="false"><span aria-hidden="true">☾</span></button>
+      </div>
+    </div>
+  </header>
+  <main class="shell">
+    <div class="online-notice" id="notice" role="status" hidden></div>
+    <div id="app"><p class="muted">Open your hosted room or invite link to play online.</p></div>
+  </main>
+  <div id="nudge-pop" class="nudge-pop" role="status" aria-live="polite"></div>
+  <div id="nudge-stream" class="nudge-stream" aria-hidden="true"></div>
+  <audio id="soundtrack" src="/assets/ship-signal.m4a" preload="none" loop></audio>
+  <dialog id="help" aria-labelledby="help-heading">
+    <h2 id="help-heading">How to Play</h2>
+    <ol>
+      <li>Scan the invite QR code or open the invite link to play on your phone. The host can also add players to a shared device.</li>
+      <li>Each round draws one question from a random pack. Answer in 1–5 words. The imposter secretly gets a different question.</li>
+      <li>Tap an answer for the Hot Seat. Keep tapping a player’s name to nudge them privately. Players on their own devices can type or record a reply.</li>
+      <li>Chat with the room while voting. Vote for one other player. Once every ballot is locked, the room can see who voted for whom. The imposter escapes if there’s a tie for first or someone else gets the most votes.</li>
+      <li>When the countdown ends, the group earns 1 point each if they caught the imposter. Otherwise the imposter earns 2 points.</li>
+    </ol>
+    <button class="button primary block" type="button" data-close>Got it</button>
+  </dialog>
+  <dialog id="invite" aria-labelledby="invite-heading">
+    <h2 id="invite-heading">Invite Player</h2>
+    <p class="muted">Scan with your phone’s camera to join on your own device, or share the link.</p>
+    <canvas id="invite-qr" role="img" aria-label="Scan to join this game"></canvas>
+    <label for="invite-url" class="sr-only">Private player link</label>
+    <input id="invite-url" class="answer-input" readonly>
+    <p id="copy-status" role="status"></p>
+    <div class="dialog-actions">
+      <button class="button" type="button" data-close>Done</button>
+      <button class="button primary" id="copy-invite" type="button">Copy Link</button>
+    </div>
+  </dialog>
+  <dialog id="new-game" aria-labelledby="new-game-heading">
+    <h2 id="new-game-heading">Start a new game?</h2>
+    <p class="muted">This clears the current round and scores. Online players stay connected and return to setup.</p>
+    <div class="dialog-actions">
+      <button class="button" type="button" data-close autofocus>Cancel</button>
+      <button class="button primary" id="confirm-new-game" type="button">Start New Game</button>
+    </div>
+  </dialog>
+</body>
+</html>
